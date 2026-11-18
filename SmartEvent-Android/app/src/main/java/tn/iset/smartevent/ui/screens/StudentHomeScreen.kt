@@ -33,6 +33,7 @@ import tn.iset.smartevent.ui.theme.Slate300
 import tn.iset.smartevent.ui.theme.Slate500
 import tn.iset.smartevent.ui.theme.White
 
+// Accueil de l'espace étudiant : événements à venir et accès rapide aux autres écrans.
 @Composable
 fun StudentHomeScreen(onEventClick: (Int) -> Unit, onSearch: () -> Unit, onSeeRegs: () -> Unit) {
     Column(

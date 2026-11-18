@@ -12,6 +12,9 @@ import tn.iset.smartevent.repo.EventRepository;
 import tn.iset.smartevent.repo.RegistrationRepository;
 import tn.iset.smartevent.repo.UserRepository;
 
+// Espace enseignant (T1 à T5).
+// RG6 : un enseignant ne voit et ne modifie que ses propres événements ; la méthode owned()
+// renvoie 403 si l'événement appartient à quelqu'un d'autre.
 @RestController
 @RequestMapping("/api/teacher")
 public class TeacherController {
@@ -24,6 +27,7 @@ public class TeacherController {
         this.events = events; this.regs = regs; this.users = users; this.mapper = mapper;
     }
 
+    // T1 : ses propres événements
     @GetMapping("/events")
     public List<EventDto> mine(Principal p) {
         return events.findByOwnerEmail(p.getName()).stream().map(mapper::toDto).toList();
@@ -41,6 +45,7 @@ public class TeacherController {
         return mapper.toDto(events.save(e));
     }
 
+    // T3 : modifier un de ses événements
     @PutMapping("/events/{id}")
     public EventDto update(@PathVariable Integer id, @RequestBody EventDto d, Principal p) {
         Event e = owned(id, p);
@@ -52,6 +57,7 @@ public class TeacherController {
         return mapper.toDto(events.save(e));
     }
 
+    // T4 : supprimer un de ses événements (et les inscriptions associées)
     @DeleteMapping("/events/{id}")
     @Transactional
     public void delete(@PathVariable Integer id, Principal p) {
@@ -60,6 +66,7 @@ public class TeacherController {
         events.deleteById(id);
     }
 
+    // T5 : liste des étudiants inscrits à cet événement
     @GetMapping("/events/{id}/participants")
     public List<UserDto> participants(@PathVariable Integer id, Principal p) {
         owned(id, p);
@@ -69,12 +76,14 @@ public class TeacherController {
                 .map(u -> new UserDto(u.id, u.name, u.email, u.role, u.photo, u.phone)).toList();
     }
 
+    // Vérifie que l'événement appartient bien à l'enseignant connecté (RG6)
     private Event owned(Integer id, Principal p) {
         Event e = events.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
         if (!p.getName().equals(e.ownerEmail)) throw new ResponseStatusException(HttpStatus.FORBIDDEN);
         return e;
     }
 
+    // Recopie les champs du formulaire dans l'entité (le statut est géré à part)
     private void fill(Event e, EventDto d) {
         e.title = d.title();
         e.description = d.description();

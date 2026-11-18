@@ -10,6 +10,8 @@ import tn.iset.smartevent.model.User;
 import tn.iset.smartevent.repo.UserRepository;
 import tn.iset.smartevent.security.JwtService;
 
+// Inscription, connexion et informations du compte.
+// Ces URL sont les seules accessibles sans jeton (voir SecurityConfig).
 @RestController
 @RequestMapping("/api/auth")
 public class AuthController {

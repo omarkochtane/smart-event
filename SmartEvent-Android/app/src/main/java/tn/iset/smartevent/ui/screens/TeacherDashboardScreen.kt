@@ -23,6 +23,7 @@ import tn.iset.smartevent.ui.theme.Cloud
 import tn.iset.smartevent.ui.theme.Navy900
 import tn.iset.smartevent.ui.theme.Slate500
 
+// Tableau de bord de l'enseignant : ajouter un événement ou consulter les siens.
 @Composable
 fun TeacherDashboardScreen(onAdd: () -> Unit, onSeeEvents: () -> Unit) {
     val mine = AppState.teacherEvents

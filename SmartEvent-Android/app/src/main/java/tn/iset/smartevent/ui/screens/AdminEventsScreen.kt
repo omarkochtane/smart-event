@@ -43,8 +43,10 @@ import tn.iset.smartevent.ui.theme.Navy900
 import tn.iset.smartevent.ui.theme.Slate500
 import tn.iset.smartevent.ui.theme.White
 
+// A4 / A5 / A6 : tous les événements (les trois statuts), ajout, validation et refus.
 @Composable
 fun AdminEventsScreen(onAdd: () -> Unit = {}) {
+    // Filtre par statut : par défaut les événements en attente de validation
     var filter by remember { mutableStateOf<EventStatus?>(EventStatus.EN_ATTENTE) }
     val list = AppState.events.filter { filter == null || it.status == filter }
 
@@ -120,6 +122,7 @@ fun AdminEventsScreen(onAdd: () -> Unit = {}) {
                         Text(event.description, fontSize = 13.sp, color = Navy900)
 
                         Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                            // A6 : l'administrateur valide ou refuse (RG5 : EN_ATTENTE, VALIDE, REFUSE)
                             if (event.status != EventStatus.REFUSE) {
                                 OutlinedButton(
                                     onClick = { AppState.setStatus(event.id, EventStatus.REFUSE) },

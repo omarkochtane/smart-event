@@ -9,6 +9,7 @@ import tn.iset.smartevent.model.User;
 import tn.iset.smartevent.repo.UserRepository;
 
 // Profil de l'utilisateur connecté (tous les rôles)
+// Profil de l'utilisateur connecté (tous les rôles) : consultation et photo.
 @RestController
 @RequestMapping("/api/me")
 public class ProfileController {

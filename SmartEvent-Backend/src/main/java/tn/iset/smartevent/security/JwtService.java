@@ -9,6 +9,8 @@ import javax.crypto.SecretKey;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+// Création et lecture des jetons JWT.
+// La clé secrète et la durée de validité viennent de application.properties.
 @Service
 public class JwtService {
     private final SecretKey key;
@@ -19,6 +21,7 @@ public class JwtService {
         this.days = days;
     }
 
+    // Jeton signé contenant l'email (subject) et le rôle, valable "days" jours
     public String generate(String email, String role) {
         Date now = new Date();
         return Jwts.builder()
@@ -30,6 +33,7 @@ public class JwtService {
                 .compact();
     }
 
+    // Vérifie la signature du jeton et renvoie son contenu (lève une exception si invalide)
     public Claims parse(String token) {
         return Jwts.parser().verifyWith(key).build().parseSignedClaims(token).getPayload();
     }

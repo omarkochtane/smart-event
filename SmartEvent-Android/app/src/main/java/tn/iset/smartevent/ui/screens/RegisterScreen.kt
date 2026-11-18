@@ -42,6 +42,9 @@ import tn.iset.smartevent.ui.theme.Cloud
 import tn.iset.smartevent.ui.theme.Navy900
 import tn.iset.smartevent.ui.theme.Slate500
 
+// E1 : création d'un compte étudiant (RG7 : seuls les étudiants s'inscrivent eux-mêmes).
+// Champs obligatoires : nom, email, mot de passe (4 caractères minimum)
+// et numéro de téléphone (8 chiffres minimum).
 @Composable
 fun RegisterScreen(onBack: () -> Unit, onRegister: () -> Unit) {
     var name by remember { mutableStateOf("") }
@@ -91,12 +94,14 @@ fun RegisterScreen(onBack: () -> Unit, onRegister: () -> Unit) {
         }
         PrimaryButton("S'inscrire", {
             val digits = phone.filter { it.isDigit() }
+            // Validation des champs avant l'envoi au serveur
             if (name.isBlank() || email.isBlank()) {
                 error = "Nom et email obligatoires"
             } else if (digits.length < 8) {
                 error = "Numéro de téléphone obligatoire (8 chiffres minimum)"
             } else {
                 error = null
+                // Mode API : le serveur crée le compte et renvoie un jeton JWT
                 if (ApiConfig.USE_API) {
                     when {
                         password.length < 4 -> error = "Mot de passe trop court"

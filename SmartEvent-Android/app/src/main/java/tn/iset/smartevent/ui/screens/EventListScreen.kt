@@ -31,9 +31,12 @@ import tn.iset.smartevent.ui.components.EventCard
 import tn.iset.smartevent.ui.theme.Cloud
 import tn.iset.smartevent.ui.theme.Navy900
 
+// E3 : liste des événements validés, avec filtre par catégorie.
+// Écran visible par les visiteurs et par les étudiants.
 @Composable
 fun EventListScreen(onBack: () -> Unit, onEventClick: (Int) -> Unit) {
     var selected by remember { mutableStateOf("Tous") }
+    // RG1 : seuls les événements validés sont visibles ; "Tous" = pas de filtre
     val events = if (selected == "Tous") AppState.publicEvents
     else AppState.publicEvents.filter { it.category == selected }
 

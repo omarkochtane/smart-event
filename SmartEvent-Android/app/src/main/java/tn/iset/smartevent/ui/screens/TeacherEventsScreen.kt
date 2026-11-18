@@ -21,8 +21,11 @@ import tn.iset.smartevent.ui.theme.Cloud
 import tn.iset.smartevent.ui.theme.Navy900
 import tn.iset.smartevent.ui.theme.Slate500
 
+// T1 / T3 / T4 : liste des événements de l'enseignant connecté, avec leur statut,
+// et accès à la modification, à la suppression et aux participants (RG6).
 @Composable
 fun TeacherEventsScreen(onEdit: (Int) -> Unit, onParticipants: (Int) -> Unit) {
+    // RG6 : uniquement les événements de l'enseignant connecté
     val mine = AppState.teacherEvents
 
     Column(

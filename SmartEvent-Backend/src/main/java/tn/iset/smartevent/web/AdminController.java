@@ -12,6 +12,8 @@ import tn.iset.smartevent.repo.EventRepository;
 import tn.iset.smartevent.repo.RegistrationRepository;
 import tn.iset.smartevent.repo.UserRepository;
 
+// Espace administrateur (A1 à A6) : gestion des utilisateurs et validation des événements.
+// Toutes les URL /api/admin/** sont réservées au rôle ADMIN (voir SecurityConfig).
 @RestController
 @RequestMapping("/api/admin")
 public class AdminController {
@@ -24,11 +26,13 @@ public class AdminController {
         this.users = users; this.events = events; this.regs = regs; this.mapper = mapper;
     }
 
+    // A2 : liste de tous les utilisateurs
     @GetMapping("/users")
     public List<UserDto> users() {
         return users.findAll().stream().map(u -> new UserDto(u.id, u.name, u.email, u.role, u.photo, u.phone)).toList();
     }
 
+    // A3 : supprimer un utilisateur (et ses inscriptions). Un administrateur n'est pas supprimable.
     @DeleteMapping("/users/{id}")
     @Transactional
     public void deleteUser(@PathVariable Integer id) {
@@ -39,6 +43,7 @@ public class AdminController {
         users.deleteById(id);
     }
 
+    // RG7 : l'administrateur choisit si un compte est étudiant ou enseignant
     // L'administrateur choisit si un utilisateur est ÉTUDIANT ou ENSEIGNANT
     @PutMapping("/users/{id}/role")
     public void setRole(@PathVariable Integer id, @RequestBody RoleRequest r) {
@@ -51,11 +56,13 @@ public class AdminController {
         users.save(u);
     }
 
+    // A4 : tous les événements, quel que soit leur statut
     @GetMapping("/events")
     public List<EventDto> allEvents() {
         return events.findAll().stream().map(mapper::toDto).toList();
     }
 
+    // A6 : valider ou refuser un événement (RG5 : EN_ATTENTE, VALIDE, REFUSE)
     // Valider ou refuser un événement
     @PutMapping("/events/{id}/status")
     public void setStatus(@PathVariable Integer id, @RequestBody StatusRequest r) {

@@ -37,10 +37,13 @@ import tn.iset.smartevent.ui.theme.Navy900
 import tn.iset.smartevent.ui.theme.Slate500
 import tn.iset.smartevent.ui.theme.White
 
+// E9 : profil de l'étudiant (nom, email, photo) et déconnexion.
+// La photo est choisie dans la galerie puis envoyée au serveur en base64.
 @Composable
 fun StudentProfileScreen(onLogout: () -> Unit, role: String = "STUDENT") {
     val context = LocalContext.current
     val picker = rememberLauncherForActivityResult(ActivityResultContracts.GetContent()) { uri ->
+        // Photo de profil : réduite à 400 px puis envoyée au serveur en base64
         if (uri != null) uriToBase64(context, uri, 400)?.let { AppState.setPhoto(it) }
     }
     Column(

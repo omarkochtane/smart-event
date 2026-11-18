@@ -24,6 +24,7 @@ import tn.iset.smartevent.ui.theme.Cloud
 import tn.iset.smartevent.ui.theme.Navy900
 import tn.iset.smartevent.ui.theme.Slate500
 
+// Tableau de bord de l'administrateur : accès aux utilisateurs et aux événements.
 @Composable
 fun AdminDashboardScreen(onSeeEvents: () -> Unit, onSeeUsers: () -> Unit) {
     val events = AppState.events

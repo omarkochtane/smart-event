@@ -45,6 +45,7 @@ import tn.iset.smartevent.ui.theme.Slate500
 import tn.iset.smartevent.ui.theme.StatusRed
 import tn.iset.smartevent.ui.theme.White
 
+// A2 / A3 : liste des utilisateurs, choix du rôle (étudiant ou enseignant) et suppression.
 @Composable
 fun AdminUsersScreen() {
     var toDelete by remember { mutableStateOf<AppUser?>(null) }
@@ -121,6 +122,7 @@ fun AdminUsersScreen() {
             text = { Text("${user.name} sera supprimé définitivement.") },
             confirmButton = {
                 TextButton(onClick = {
+                    // A3 : suppression confirmée par une boîte de dialogue
                     AppState.deleteUser(user.id)
                     toDelete = null
                 }) { Text("Supprimer", color = StatusRed) }

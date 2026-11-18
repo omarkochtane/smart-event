@@ -36,12 +36,13 @@ import tn.iset.smartevent.ui.theme.Slate300
 import tn.iset.smartevent.ui.theme.Slate500
 import tn.iset.smartevent.ui.theme.White
 
+// E4 : recherche d'un événement par titre et filtre par catégorie.
 @Composable
 fun StudentSearchScreen(onEventClick: (Int) -> Unit) {
     var query by remember { mutableStateOf("") }
     var selected by remember { mutableStateOf("Tous") }
 
-    // Filtre par catégorie + recherche dans le titre
+    // E4 : filtre par catégorie, puis recherche dans le titre
     val results = AppState.publicEvents.filter {
         (selected == "Tous" || it.category == selected) &&
             it.title.contains(query, ignoreCase = true)

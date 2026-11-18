@@ -26,6 +26,7 @@ import tn.iset.smartevent.ui.theme.Navy900
 import tn.iset.smartevent.ui.theme.Slate500
 import tn.iset.smartevent.ui.theme.White
 
+// Barre de navigation du bas de l'espace étudiant (Accueil, Recherche, Inscriptions, Profil).
 class TabItem(val route: String, val label: String, val icon: ImageVector)
 
 private val studentTabs = listOf(

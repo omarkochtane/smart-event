@@ -35,6 +35,8 @@ import tn.iset.smartevent.ui.theme.StatusGreen
 import tn.iset.smartevent.ui.theme.StatusGreenBg
 import tn.iset.smartevent.ui.theme.White
 
+// E5 / E6 / E7 : détails d'un événement et bouton d'inscription.
+// L'inscription est refusée si l'événement est complet (RG2) ou déjà réservé (RG3).
 @Composable
 fun EventDetailScreen(
     eventId: Int,

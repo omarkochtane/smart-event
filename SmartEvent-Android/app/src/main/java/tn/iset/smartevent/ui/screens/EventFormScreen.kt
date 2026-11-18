@@ -68,6 +68,7 @@ fun EventFormScreen(eventId: Int?, onBack: (() -> Unit)?, onDone: () -> Unit) {
     val context = LocalContext.current
     val picker = rememberLauncherForActivityResult(ActivityResultContracts.GetContent()) { uri ->
         if (uri != null) {
+            // L'affiche choisie dans la galerie est réduite puis convertie en base64
             val b64 = uriToBase64(context, uri)
             if (b64 != null) image = b64 else error = "Image illisible, choisissez-en une autre."
         }
@@ -164,12 +165,15 @@ fun EventFormScreen(eventId: Int?, onBack: (() -> Unit)?, onDone: () -> Unit) {
             val max = maxText.toIntOrNull()
             when {
                 title.isBlank() || date.isBlank() || location.isBlank() ->
+                    // Contrôles de saisie avant l'enregistrement
                     error = "Le titre, la date et le lieu sont obligatoires."
                 max == null || max <= 0 ->
                     error = "Le nombre de participants doit être supérieur à 0."
                 existing != null && max < existing.registered ->
                     error = "Le maximum ne peut pas être inférieur au nombre d'inscrits (${existing.registered})."
                 existing == null -> {
+                    // RG4 : un événement créé par un enseignant part EN_ATTENTE ;
+                    // créé par l'administrateur, il est directement VALIDÉ
                     AppState.addEvent(
                         Event(
                             id = AppState.nextId(),
@@ -189,6 +193,7 @@ fun EventFormScreen(eventId: Int?, onBack: (() -> Unit)?, onDone: () -> Unit) {
                     onDone()
                 }
                 else -> {
+                    // Un événement refusé repart en validation après modification
                     AppState.updateEvent(
                         existing.copy(
                             title = title.trim(),

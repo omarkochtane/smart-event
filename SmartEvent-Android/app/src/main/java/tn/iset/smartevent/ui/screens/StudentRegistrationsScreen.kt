@@ -27,8 +27,10 @@ import tn.iset.smartevent.ui.theme.Slate500
 import tn.iset.smartevent.ui.theme.StatusGreen
 import tn.iset.smartevent.ui.theme.StatusGreenBg
 
+// E8 : écran "Mes inscriptions" (RG9 : l'événement y apparaît après une inscription réussie).
 @Composable
 fun StudentRegistrationsScreen(onEventClick: (Int) -> Unit) {
+    // E8 : les événements auxquels l'étudiant connecté est inscrit
     val myEvents = AppState.publicEvents.filter { AppState.isRegistered(it.id) }
 
     Column(
@@ -73,6 +75,7 @@ fun StudentRegistrationsScreen(onEventClick: (Int) -> Unit) {
                                 "✓ Inscription confirmée",
                                 color = StatusGreen, fontSize = 13.sp, fontWeight = FontWeight.SemiBold
                             )
+                            // E7 : annuler son inscription
                             TextButton(onClick = { AppState.unregister(event.id) }) {
                                 Text("Annuler", color = Navy900, fontSize = 13.sp)
                             }

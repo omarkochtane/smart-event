@@ -2,6 +2,7 @@ package tn.iset.smartevent.dto;
 
 // Mêmes noms de champs que côté Android (data/api/Api.kt)
 public class Dtos {
+    // --- Authentification ---
     public record LoginRequest(String email, String password) {}
     public record RegisterRequest(String name, String email, String password, String phone) {}
     public record AuthResponse(String token, Integer id, String name, String email, String role, String photo) {}
@@ -10,10 +11,12 @@ public class Dtos {
             this(id, name, email, role, photo, null);
         }
     }
+    // --- Données métier ---
     public record CategoryDto(Integer id, String name) {}
     public record StatusRequest(String status) {}
     public record RoleRequest(String role) {}
     public record PhotoRequest(String photo) {}
+    // registered : nombre d'inscrits calculé par EventMapper ; image : affiche JPEG en base64
     public record EventDto(Integer id, String title, String description, String date, String time,
                            String location, String category, int maxParticipants, int registered,
                            String status, String ownerEmail, String image) {}

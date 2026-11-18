@@ -20,6 +20,7 @@ import tn.iset.smartevent.ui.theme.Cloud
 import tn.iset.smartevent.ui.theme.Navy900
 import tn.iset.smartevent.ui.theme.Slate300
 
+// Écran d'ouverture (splash screen) : logo, nom de l'application et bouton "Commencer".
 @Composable
 fun SplashScreen(onStart: () -> Unit) {
     Column(

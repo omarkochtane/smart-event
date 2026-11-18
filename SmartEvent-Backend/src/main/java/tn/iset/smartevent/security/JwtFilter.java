@@ -13,6 +13,9 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
+// Filtre exécuté avant chaque requête : lit l'en-tête "Authorization: Bearer <jeton>",
+// vérifie le jeton et place l'utilisateur (email + rôle) dans le contexte de sécurité.
+// Sans jeton valide, la requête reste anonyme et SecurityConfig décide si elle est autorisée.
 @Component
 public class JwtFilter extends OncePerRequestFilter {
     private final JwtService jwt;

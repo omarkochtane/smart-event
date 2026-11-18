@@ -2,6 +2,8 @@ package tn.iset.smartevent.model;
 
 import jakarta.persistence.*;
 
+// Utilisateur de l'application : étudiant, enseignant ou administrateur.
+// Le mot de passe n'est jamais stocké en clair : seule son empreinte BCrypt est enregistrée.
 @Entity
 @Table(name = "users")
 public class User {

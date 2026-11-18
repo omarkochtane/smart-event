@@ -16,7 +16,9 @@ import tn.iset.smartevent.repo.EventRepository;
 import tn.iset.smartevent.repo.RegistrationRepository;
 import tn.iset.smartevent.repo.UserRepository;
 
-// Visiteurs + étudiants
+// Écrans publics et espace étudiant (E3 à E9).
+// La consultation des événements validés ne demande pas de compte ;
+// les inscriptions exigent un jeton d'étudiant.
 @RestController
 @RequestMapping("/api")
 public class EventController {
@@ -32,7 +34,7 @@ public class EventController {
         this.categories = categories; this.mapper = mapper;
     }
 
-    // Catégories disponibles (entité Category) : utilisées pour le filtre et le formulaire
+    // Liste des catégories (entité Category) : filtre de recherche et formulaire
     @GetMapping("/categories")
     public List<CategoryDto> categories() {
         return categories.findAll().stream().map(c -> new CategoryDto(c.id, c.name)).toList();
@@ -44,6 +46,7 @@ public class EventController {
         return events.findByStatus("VALIDE").stream().map(mapper::toDto).toList();
     }
 
+    // E5 : détails d'un événement (seulement s'il est validé)
     @GetMapping("/events/{id}")
     public EventDto one(@PathVariable Integer id) {
         Event e = events.findById(id).filter(x -> "VALIDE".equals(x.status))

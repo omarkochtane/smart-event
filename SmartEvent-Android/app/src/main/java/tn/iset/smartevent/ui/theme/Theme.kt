@@ -20,6 +20,8 @@ private val SmartEventColors = lightColorScheme(
     error = StatusRed
 )
 
+// Thème de l'application : applique la palette SMART EVENT (voir Color.kt)
+// et la typographie Material 3 à tous les écrans.
 @Composable
 fun SmartEventTheme(content: @Composable () -> Unit) {
     MaterialTheme(

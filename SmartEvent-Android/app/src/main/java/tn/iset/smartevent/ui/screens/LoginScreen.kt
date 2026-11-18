@@ -41,6 +41,9 @@ import tn.iset.smartevent.ui.theme.Slate300
 import tn.iset.smartevent.ui.theme.Slate500
 import tn.iset.smartevent.ui.theme.White
 
+// E2 / T1 / A1 : écran de connexion.
+// Mode API : vérification de l'email et du mot de passe par le serveur (JWT).
+// Mode fictif : le rôle est deviné d'après l'email.
 @Composable
 fun LoginScreen(onLogin: () -> Unit, onRegister: () -> Unit) {
     var email by remember { mutableStateOf("") }
