@@ -1,0 +1,929 @@
+{
+  "info": {
+    "name": "SMART EVENT - API REST",
+    "description": "Tests de l'API SMART EVENT (Spring Boot, port 8081).\n\nOrdre d'utilisation : lancer d'abord les connexions du dossier 1 (elles enregistrent les jetons JWT), puis les autres dossiers.\n\nVariables : base (http://localhost:8081/api), tokenStudent, tokenTeacher, tokenAdmin.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "base",
+      "value": "http://localhost:8081/api"
+    },
+    {
+      "key": "tokenStudent",
+      "value": ""
+    },
+    {
+      "key": "tokenTeacher",
+      "value": ""
+    },
+    {
+      "key": "tokenAdmin",
+      "value": ""
+    },
+    {
+      "key": "eventId",
+      "value": "1"
+    }
+  ],
+  "item": [
+    {
+      "name": "1. Authentification",
+      "item": [
+        {
+          "name": "Inscription d'un étudiant (E1)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base}}/auth/register",
+              "host": [
+                "{{base}}"
+              ],
+              "path": [
+                "auth",
+                "register"
+              ]
+            },
+            "description": "RG7 : seuls les étudiants peuvent créer un compte. Le téléphone est obligatoire.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Etudiant Test\",\n  \"email\": \"etudiant.test@iset.tn\",\n  \"password\": \"etud123\",\n  \"phone\": \"20123456\"\n}"
+            }
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Statut 200\", function () { pm.response.to.have.status(200); });",
+                  "var d = pm.response.json();",
+                  "pm.collectionVariables.set(\"tokenStudent\", d.token);",
+                  "pm.collectionVariables.set(\"tokenStudent_id\", d.id);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Connexion étudiant (E2)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base}}/auth/login",
+              "host": [
+                "{{base}}"
+              ],
+              "path": [
+                "auth",
+                "login"
+              ]
+            },
+            "description": "",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"amira.ben@iset.tn\",\n  \"password\": \"etud123\"\n}"
+            }
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Statut 200\", function () { pm.response.to.have.status(200); });",
+                  "var d = pm.response.json();",
+                  "pm.collectionVariables.set(\"tokenStudent\", d.token);",
+                  "pm.collectionVariables.set(\"tokenStudent_id\", d.id);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Connexion enseignant (T1)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base}}/auth/login",
+              "host": [
+                "{{base}}"
+              ],
+              "path": [
+                "auth",
+                "login"
+              ]
+            },
+            "description": "",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"prof.ahmed@iset.tn\",\n  \"password\": \"prof123\"\n}"
+            }
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Statut 200\", function () { pm.response.to.have.status(200); });",
+                  "var d = pm.response.json();",
+                  "pm.collectionVariables.set(\"tokenTeacher\", d.token);",
+                  "pm.collectionVariables.set(\"tokenTeacher_id\", d.id);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Connexion administrateur (A1)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base}}/auth/login",
+              "host": [
+                "{{base}}"
+              ],
+              "path": [
+                "auth",
+                "login"
+              ]
+            },
+            "description": "Les emails administrateurs sont définis dans application.properties (app.admin-emails). Créer d'abord le compte via /auth/register avec cet email.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"omarkochtane51@gmail.com\",\n  \"password\": \"admin123\"\n}"
+            }
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Statut 200\", function () { pm.response.to.have.status(200); });",
+                  "var d = pm.response.json();",
+                  "pm.collectionVariables.set(\"tokenAdmin\", d.token);",
+                  "pm.collectionVariables.set(\"tokenAdmin_id\", d.id);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Connexion avec un mauvais mot de passe",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base}}/auth/login",
+              "host": [
+                "{{base}}"
+              ],
+              "path": [
+                "auth",
+                "login"
+              ]
+            },
+            "description": "Doit renvoyer 401.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"amira.ben@iset.tn\",\n  \"password\": \"faux\"\n}"
+            }
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Refus 401\", function () { pm.response.to.have.status(401); });"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "2. Espace public",
+      "item": [
+        {
+          "name": "Liste des événements validés (E3)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base}}/events",
+              "host": [
+                "{{base}}"
+              ],
+              "path": [
+                "events"
+              ]
+            },
+            "description": "RG1 : seuls les événements au statut VALIDE sont publics."
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Statut 200\", function () { pm.response.to.have.status(200); });"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Détails d'un événement (E5)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base}}/events/{{eventId}}",
+              "host": [
+                "{{base}}"
+              ],
+              "path": [
+                "events",
+                "{{eventId}}"
+              ]
+            },
+            "description": ""
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Statut 200\", function () { pm.response.to.have.status(200); });"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Liste des catégories",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base}}/categories",
+              "host": [
+                "{{base}}"
+              ],
+              "path": [
+                "categories"
+              ]
+            },
+            "description": "Entité Category."
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Statut 200\", function () { pm.response.to.have.status(200); });"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "3. Étudiant",
+      "item": [
+        {
+          "name": "S'inscrire à un événement (E6)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{tokenStudent}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base}}/events/{{eventId}}/register",
+              "host": [
+                "{{base}}"
+              ],
+              "path": [
+                "events",
+                "{{eventId}}",
+                "register"
+              ]
+            },
+            "description": "RG2 : refusé si complet. RG3 : refusé si déjà inscrit (409)."
+          },
+          "response": []
+        },
+        {
+          "name": "Mes inscriptions (E8)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{tokenStudent}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base}}/me/registrations",
+              "host": [
+                "{{base}}"
+              ],
+              "path": [
+                "me",
+                "registrations"
+              ]
+            },
+            "description": ""
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Statut 200\", function () { pm.response.to.have.status(200); });"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Mon profil (E9)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{tokenStudent}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base}}/me",
+              "host": [
+                "{{base}}"
+              ],
+              "path": [
+                "me"
+              ]
+            },
+            "description": ""
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Statut 200\", function () { pm.response.to.have.status(200); });"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Changer ma photo de profil",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{tokenStudent}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base}}/me/photo",
+              "host": [
+                "{{base}}"
+              ],
+              "path": [
+                "me",
+                "photo"
+              ]
+            },
+            "description": "photo : image JPEG encodée en base64, ou null pour l'enlever.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"photo\": null\n}"
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Annuler mon inscription (E7)",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{tokenStudent}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base}}/events/{{eventId}}/register",
+              "host": [
+                "{{base}}"
+              ],
+              "path": [
+                "events",
+                "{{eventId}}",
+                "register"
+              ]
+            },
+            "description": ""
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "4. Enseignant",
+      "item": [
+        {
+          "name": "Mes événements (T1)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{tokenTeacher}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base}}/teacher/events",
+              "host": [
+                "{{base}}"
+              ],
+              "path": [
+                "teacher",
+                "events"
+              ]
+            },
+            "description": ""
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Statut 200\", function () { pm.response.to.have.status(200); });"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Ajouter un événement (T2)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{tokenTeacher}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base}}/teacher/events",
+              "host": [
+                "{{base}}"
+              ],
+              "path": [
+                "teacher",
+                "events"
+              ]
+            },
+            "description": "RG4 : l'événement créé est EN_ATTENTE jusqu'à validation de l'administrateur.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Atelier Kotlin\",\n  \"description\": \"Initiation au développement Android avec Kotlin.\",\n  \"date\": \"22/12/2026\",\n  \"time\": \"10:00\",\n  \"location\": \"Salle A101\",\n  \"category\": \"Informatique\",\n  \"maxParticipants\": 30\n}"
+            }
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Statut EN_ATTENTE\", function () { pm.expect(pm.response.json().status).to.eql(\"EN_ATTENTE\"); });",
+                  "pm.collectionVariables.set(\"newEventId\", pm.response.json().id);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Modifier un événement (T3)",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{tokenTeacher}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base}}/teacher/events/{{newEventId}}",
+              "host": [
+                "{{base}}"
+              ],
+              "path": [
+                "teacher",
+                "events",
+                "{{newEventId}}"
+              ]
+            },
+            "description": "RG6 : uniquement ses propres événements (sinon 403).",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Atelier Kotlin avancé\",\n  \"description\": \"Coroutines et Jetpack Compose.\",\n  \"date\": \"23/12/2026\",\n  \"time\": \"14:00\",\n  \"location\": \"Salle A102\",\n  \"category\": \"Informatique\",\n  \"maxParticipants\": 35\n}"
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Participants d'un événement (T5)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{tokenTeacher}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base}}/teacher/events/{{newEventId}}/participants",
+              "host": [
+                "{{base}}"
+              ],
+              "path": [
+                "teacher",
+                "events",
+                "{{newEventId}}",
+                "participants"
+              ]
+            },
+            "description": ""
+          },
+          "response": []
+        },
+        {
+          "name": "Supprimer un événement (T4)",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{tokenTeacher}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base}}/teacher/events/{{newEventId}}",
+              "host": [
+                "{{base}}"
+              ],
+              "path": [
+                "teacher",
+                "events",
+                "{{newEventId}}"
+              ]
+            },
+            "description": ""
+          },
+          "response": []
+        },
+        {
+          "name": "Accès refusé à un étudiant",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{tokenStudent}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base}}/teacher/events",
+              "host": [
+                "{{base}}"
+              ],
+              "path": [
+                "teacher",
+                "events"
+              ]
+            },
+            "description": "Doit renvoyer 403 : un étudiant n'a pas accès à l'espace enseignant."
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Refus 403\", function () { pm.response.to.have.status(403); });"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "5. Administrateur",
+      "item": [
+        {
+          "name": "Liste des utilisateurs (A2)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{tokenAdmin}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base}}/admin/users",
+              "host": [
+                "{{base}}"
+              ],
+              "path": [
+                "admin",
+                "users"
+              ]
+            },
+            "description": ""
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Statut 200\", function () { pm.response.to.have.status(200); });"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Tous les événements (A4)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{tokenAdmin}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base}}/admin/events",
+              "host": [
+                "{{base}}"
+              ],
+              "path": [
+                "admin",
+                "events"
+              ]
+            },
+            "description": "Les trois statuts : EN_ATTENTE, VALIDE, REFUSE."
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Statut 200\", function () { pm.response.to.have.status(200); });"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Ajouter un événement (A5)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{tokenAdmin}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base}}/admin/events",
+              "host": [
+                "{{base}}"
+              ],
+              "path": [
+                "admin",
+                "events"
+              ]
+            },
+            "description": "Un événement créé par l'administrateur est directement VALIDE.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Journée d'intégration\",\n  \"description\": \"Accueil des nouveaux étudiants.\",\n  \"date\": \"28/12/2026\",\n  \"time\": \"09:00\",\n  \"location\": \"Hall principal\",\n  \"category\": \"Club\",\n  \"maxParticipants\": 150\n}"
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Valider un événement (A6)",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{tokenAdmin}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base}}/admin/events/{{eventId}}/status",
+              "host": [
+                "{{base}}"
+              ],
+              "path": [
+                "admin",
+                "events",
+                "{{eventId}}",
+                "status"
+              ]
+            },
+            "description": "RG5 : statuts possibles EN_ATTENTE, VALIDE, REFUSE.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"VALIDE\"\n}"
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Refuser un événement (A6)",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{tokenAdmin}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base}}/admin/events/{{eventId}}/status",
+              "host": [
+                "{{base}}"
+              ],
+              "path": [
+                "admin",
+                "events",
+                "{{eventId}}",
+                "status"
+              ]
+            },
+            "description": "",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"REFUSE\"\n}"
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Changer le rôle d'un utilisateur",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{tokenAdmin}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base}}/admin/users/2/role",
+              "host": [
+                "{{base}}"
+              ],
+              "path": [
+                "admin",
+                "users",
+                "2",
+                "role"
+              ]
+            },
+            "description": "RG7 : les comptes enseignants sont promus par l'administrateur.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"role\": \"TEACHER\"\n}"
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Supprimer un utilisateur (A3)",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{tokenAdmin}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base}}/admin/users/9",
+              "host": [
+                "{{base}}"
+              ],
+              "path": [
+                "admin",
+                "users",
+                "9"
+              ]
+            },
+            "description": ""
+          },
+          "response": []
+        }
+      ]
+    }
+  ]
+}
