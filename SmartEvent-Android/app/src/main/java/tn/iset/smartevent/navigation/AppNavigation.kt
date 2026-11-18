@@ -72,6 +72,17 @@ object Routes {
     const val ADMIN_ADD = "admin_add"
 }
 
+// Déconnexion : retour à l'accueil public en vidant la pile de l'espace connecté.
+// "racine" est l'écran d'accueil du rôle (étudiant, enseignant ou administrateur) :
+// c'est le bas de la pile depuis la connexion, donc tout est supprimé et le bouton
+// "retour" ne ramène plus sur un écran réservé à un compte connecté.
+private fun NavController.logoutToHome(racine: String) {
+    navigate(Routes.HOME) {
+        popUpTo(racine) { inclusive = true }
+        launchSingleTop = true
+    }
+}
+
 // Changer d'onglet dans la barre du bas
 private fun NavController.goTab(route: String, start: String) {
     navigate(route) {
@@ -175,7 +186,7 @@ fun AppNavigation() {
             StudentScaffold(Routes.STUDENT_PROFILE, { nav.goTab(it, Routes.STUDENT_HOME) }) {
                 StudentProfileScreen(onLogout = {
                     AppState.logout()
-                        nav.navigate(Routes.HOME) { popUpTo(nav.graph.id) { inclusive = true } }
+                        nav.logoutToHome(Routes.STUDENT_HOME)
                 })
             }
         }
@@ -251,7 +262,7 @@ fun AppNavigation() {
                     role = "TEACHER",
                     onLogout = {
                         AppState.logout()
-                        nav.navigate(Routes.HOME) { popUpTo(nav.graph.id) { inclusive = true } }
+                        nav.logoutToHome(Routes.TEACHER_HOME)
                     }
                 )
             }
@@ -314,7 +325,7 @@ fun AppNavigation() {
                     role = "ADMIN",
                     onLogout = {
                         AppState.logout()
-                        nav.navigate(Routes.HOME) { popUpTo(nav.graph.id) { inclusive = true } }
+                        nav.logoutToHome(Routes.ADMIN_HOME)
                     }
                 )
             }
