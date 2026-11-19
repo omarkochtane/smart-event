@@ -70,6 +70,8 @@ object Routes {
     const val ADMIN_EVENTS = "admin_events"
     const val ADMIN_PROFILE = "admin_profile"
     const val ADMIN_ADD = "admin_add"
+    const val ADMIN_PARTICIPANTS = "admin_participants/{id}"
+    fun adminParticipants(id: Int) = "admin_participants/$id"
 }
 
 // Déconnexion : retour à l'accueil public en vidant la pile de l'espace connecté.
@@ -307,8 +309,21 @@ fun AppNavigation() {
 
         composable(Routes.ADMIN_EVENTS) {
             AdminScaffold(Routes.ADMIN_EVENTS, { nav.goTab(it, Routes.ADMIN_HOME) }) {
-                AdminEventsScreen(onAdd = { nav.navigate(Routes.ADMIN_ADD) })
+                AdminEventsScreen(
+                    onAdd = { nav.navigate(Routes.ADMIN_ADD) },
+                    onParticipants = { id -> nav.navigate(Routes.adminParticipants(id)) }
+                )
             }
+        }
+
+        composable(
+            route = Routes.ADMIN_PARTICIPANTS,
+            arguments = listOf(navArgument("id") { type = NavType.IntType })
+        ) { entry ->
+            ParticipantsScreen(
+                eventId = entry.arguments?.getInt("id") ?: 0,
+                onBack = { nav.popBackStack() }
+            )
         }
 
         composable(Routes.ADMIN_ADD) {

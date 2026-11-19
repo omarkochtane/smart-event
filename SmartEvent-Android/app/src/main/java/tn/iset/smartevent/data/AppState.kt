@@ -274,7 +274,12 @@ object AppState {
         }
         scope.launch {
             try {
-                val list = api.participants(ApiClient.bearer, eventId)
+                // L'administrateur consulte les inscrits de tous les événements,
+                // l'enseignant uniquement ceux des siens (RG6).
+                val list = if (role == Role.ADMIN)
+                    api.adminParticipants(ApiClient.bearer, eventId)
+                else
+                    api.participants(ApiClient.bearer, eventId)
                 onResult(list.map { AppUser(it.id, it.name, it.email, roleOf(it.role), it.photo, it.phone) })
                 apiError = null
             } catch (e: Exception) {

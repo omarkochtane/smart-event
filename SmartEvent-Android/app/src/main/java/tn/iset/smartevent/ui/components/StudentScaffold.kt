@@ -12,6 +12,7 @@ import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Icon
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.NavigationBarItemDefaults
@@ -62,7 +63,12 @@ fun BottomTabsScaffold(
         containerColor = Cloud,
         contentWindowInsets = WindowInsets(0, 0, 0, 0),
         bottomBar = {
-            NavigationBar(containerColor = White) {
+            // navigationBarsPadding : la barre d'onglets se place au-dessus
+            // de la barre système d'Android (boutons retour / accueil).
+            NavigationBar(
+                containerColor = White,
+                modifier = Modifier.navigationBarsPadding()
+            ) {
                 tabs.forEach { tab ->
                     NavigationBarItem(
                         selected = selected == tab.route,

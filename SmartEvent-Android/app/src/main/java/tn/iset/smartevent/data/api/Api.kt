@@ -121,6 +121,10 @@ interface ApiService {
     @GET("api/teacher/events/{id}/participants")
     suspend fun participants(@Header("Authorization") auth: String, @Path("id") id: Int): List<UserDto>
 
+    // Même liste côté administrateur, pour n'importe quel événement
+    @GET("api/admin/events/{id}/participants")
+    suspend fun adminParticipants(@Header("Authorization") auth: String, @Path("id") id: Int): List<UserDto>
+
     // Profil (tous les rôles)
     @PUT("api/me/photo")
     suspend fun updatePhoto(@Header("Authorization") auth: String, @Body body: PhotoRequest)

@@ -86,4 +86,16 @@ public class AdminController {
         e.ownerEmail = p.getName();
         return mapper.toDto(events.save(e));
     }
+
+    // Liste des étudiants inscrits à un événement.
+    // Contrairement à l'enseignant (RG6, ses propres événements seulement),
+    // l'administrateur peut consulter les inscrits de n'importe quel événement.
+    @GetMapping("/events/{id}/participants")
+    public List<UserDto> participants(@PathVariable Integer id) {
+        if (!events.existsById(id)) throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+        return regs.findByEventId(id).stream()
+                .map(r -> users.findById(r.userId).orElse(null))
+                .filter(u -> u != null)
+                .map(u -> new UserDto(u.id, u.name, u.email, u.role, u.photo, u.phone)).toList();
+    }
 }

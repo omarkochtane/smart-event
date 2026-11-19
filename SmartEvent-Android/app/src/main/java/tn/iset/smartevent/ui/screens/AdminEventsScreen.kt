@@ -45,7 +45,7 @@ import tn.iset.smartevent.ui.theme.White
 
 // A4 / A5 / A6 : tous les événements (les trois statuts), ajout, validation et refus.
 @Composable
-fun AdminEventsScreen(onAdd: () -> Unit = {}) {
+fun AdminEventsScreen(onAdd: () -> Unit = {}, onParticipants: (Int) -> Unit = {}) {
     // Filtre par statut : par défaut les événements en attente de validation
     var filter by remember { mutableStateOf<EventStatus?>(EventStatus.EN_ATTENTE) }
     val list = AppState.events.filter { filter == null || it.status == filter }
@@ -138,6 +138,18 @@ fun AdminEventsScreen(onAdd: () -> Unit = {}) {
                                     modifier = Modifier.weight(1f)
                                 ) { Text("Valider", color = White, fontSize = 13.sp) }
                             }
+                        }
+
+                        // L'administrateur consulte les inscrits de n'importe quel événement
+                        OutlinedButton(
+                            onClick = { onParticipants(event.id) },
+                            shape = RoundedCornerShape(10.dp),
+                            modifier = Modifier.fillMaxWidth()
+                        ) {
+                            Text(
+                                "Participants (${event.registered})",
+                                color = Navy900, fontSize = 13.sp
+                            )
                         }
                     }
                 }
