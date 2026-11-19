@@ -50,16 +50,27 @@ autorisé dans le pare-feu Windows.
    - email contenant `prof` → espace enseignant
    - autre email → espace étudiant
 
-## Lancer la version complète
+## Lancer le projet (à refaire après chaque démarrage du PC)
 
-1. Démarrer MySQL (Wamp / XAMPP). La base `smartevent` est créée automatiquement
-   (ou exécuter `SmartEvent-Backend/database/schema.sql`).
-2. Ouvrir `SmartEvent-Backend` dans IntelliJ / Android Studio et lancer
-   `SmartEventApplication` (port **8081**).
-3. Dans `SmartEvent-Android/.../data/api/Api.kt`, régler `BASE_URL` :
-   - émulateur Android Studio : `http://10.0.2.2:8081/`
-   - téléphone physique sur le même Wi-Fi : `http://<IP-du-PC>:8081/`
-4. Lancer l'application depuis Android Studio.
+1. **Démarrer MySQL** : lancer Wamp et attendre que son icône devienne **verte**
+   dans la barre des tâches. Sans cela le backend s'arrête avec l'erreur
+   `Communications link failure`. La base `smartevent` et ses données sont
+   conservées d'une fois sur l'autre (rien à recréer).
+2. **Démarrer le backend** : ouvrir `SmartEvent-Backend` dans Android Studio /
+   IntelliJ et lancer `SmartEventApplication` (port **8081**). Vérifier dans un
+   navigateur que `http://localhost:8081/api/events` renvoie du JSON.
+3. **Partager le Wi-Fi** (pour que des téléphones se connectent) :
+   *Paramètres → Réseau et Internet → Point d'accès sans fil mobile*. Windows
+   donne alors au PC l'adresse `192.168.137.1`, sur laquelle l'application est
+   préréglée. Le partage se désactive à chaque extinction du PC : il faut le
+   réactiver.
+4. **Lancer l'application** : ouvrir `SmartEvent-Android` dans Android Studio,
+   choisir l'appareil (émulateur ou téléphone) et cliquer sur ▶.
+   - sur l'**émulateur**, l'adresse du serveur est `10.0.2.2` : la saisir une fois
+     dans *Connexion → Adresse du serveur* ;
+   - sur un **téléphone connecté au Wi-Fi partagé**, il n'y a rien à saisir.
+
+L'adresse saisie est mémorisée sur l'appareil : elle n'est à régler qu'une fois.
 
 ## Comptes de démonstration
 
