@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="ic_launcher_background">#0D1B2B</color>
+    <!-- Bleu nuit repris du logo SMART EVENT -->
+    <color name="ic_launcher_background">#262C4E</color>
 </resources>
