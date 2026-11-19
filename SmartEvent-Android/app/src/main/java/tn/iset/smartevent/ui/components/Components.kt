@@ -251,7 +251,14 @@ fun StatusChip(status: EventStatus) {
 
 // Carte d'un événement côté enseignant (avec statut et actions)
 @Composable
-fun TeacherEventCard(event: Event, onEdit: () -> Unit, onParticipants: () -> Unit) {
+fun TeacherEventCard(
+    event: Event,
+    onEdit: () -> Unit,
+    onParticipants: () -> Unit,
+    // lectureSeule : événement d'un autre enseignant. RG6 : consultation autorisée,
+    // mais ni modification ni accès aux participants.
+    lectureSeule: Boolean = false
+) {
     Card(
         shape = RoundedCornerShape(16.dp),
         colors = CardDefaults.cardColors(containerColor = White),
@@ -280,17 +287,21 @@ fun TeacherEventCard(event: Event, onEdit: () -> Unit, onParticipants: () -> Uni
                 "${AppState.count(event)} / ${event.maxParticipants} participants",
                 fontSize = 12.sp, fontWeight = FontWeight.Medium, color = Navy900
             )
-            Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                OutlinedButton(
-                    onClick = onParticipants,
-                    shape = RoundedCornerShape(10.dp),
-                    modifier = Modifier.weight(1f)
-                ) { Text("Participants", color = Navy900, fontSize = 13.sp) }
-                OutlinedButton(
-                    onClick = onEdit,
-                    shape = RoundedCornerShape(10.dp),
-                    modifier = Modifier.weight(1f)
-                ) { Text("Modifier", color = Navy900, fontSize = 13.sp) }
+            if (lectureSeule) {
+                Text("Organisateur : ${event.owner}", fontSize = 12.sp, color = Slate500)
+            } else {
+                Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                    OutlinedButton(
+                        onClick = onParticipants,
+                        shape = RoundedCornerShape(10.dp),
+                        modifier = Modifier.weight(1f)
+                    ) { Text("Participants", color = Navy900, fontSize = 13.sp) }
+                    OutlinedButton(
+                        onClick = onEdit,
+                        shape = RoundedCornerShape(10.dp),
+                        modifier = Modifier.weight(1f)
+                    ) { Text("Modifier", color = Navy900, fontSize = 13.sp) }
+                }
             }
         }
     }

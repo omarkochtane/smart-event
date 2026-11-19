@@ -202,6 +202,28 @@ object AppState {
     val teacherEvents: List<Event>
         get() = events.filter { it.owner == userEmail || it.owner == "demo" }
 
+    // Tous les événements validés de l'institut, consultables par l'enseignant.
+    // Chargés à part : quand un enseignant est connecté, "events" ne contient que les siens.
+    val autresEvenements = mutableStateListOf<Event>()
+
+    fun loadAutresEvenements() {
+        if (!ApiConfig.USE_API) {
+            autresEvenements.clear()
+            autresEvenements.addAll(events.filter { it.status == EventStatus.VALIDE })
+            return
+        }
+        scope.launch {
+            try {
+                val list = api.publicEvents().map { it.toEvent() }.sortedByDescending { it.id }
+                autresEvenements.clear()
+                autresEvenements.addAll(list)
+                apiError = null
+            } catch (e: Exception) {
+                apiError = errorText(e)
+            }
+        }
+    }
+
     fun nextId(): Int = (events.maxOfOrNull { it.id } ?: 0) + 1
 
     fun addEvent(event: Event) {

@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.width
+import tn.iset.smartevent.ui.components.AppTextField
 import tn.iset.smartevent.ui.components.Avatar
 import tn.iset.smartevent.ui.components.CategoryChip
 import androidx.compose.foundation.layout.Row
@@ -19,6 +20,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -49,6 +51,14 @@ import tn.iset.smartevent.ui.theme.White
 @Composable
 fun AdminUsersScreen() {
     var toDelete by remember { mutableStateOf<AppUser?>(null) }
+    var recherche by remember { mutableStateOf("") }
+
+    // Recherche par nom ou par email (insensible à la casse)
+    val utilisateurs = AppState.users.filter {
+        recherche.isBlank() ||
+            it.name.contains(recherche, ignoreCase = true) ||
+            it.email.contains(recherche, ignoreCase = true)
+    }
 
     Column(
         modifier = Modifier
@@ -61,11 +71,32 @@ fun AdminUsersScreen() {
             fontSize = 22.sp, fontWeight = FontWeight.Bold, color = Navy900,
             modifier = Modifier.padding(20.dp)
         )
+
+        AppTextField(
+            value = recherche,
+            onValueChange = { recherche = it },
+            label = "",
+            placeholder = "Rechercher un nom ou un email...",
+            icon = Icons.Filled.Search,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 20.dp)
+        )
+        Spacer(Modifier.height(8.dp))
+
+        if (utilisateurs.isEmpty()) {
+            Text(
+                "Aucun utilisateur ne correspond à cette recherche.",
+                color = Slate500, fontSize = 14.sp,
+                modifier = Modifier.padding(20.dp)
+            )
+        }
+
         LazyColumn(
             contentPadding = PaddingValues(horizontal = 20.dp, vertical = 8.dp),
             verticalArrangement = Arrangement.spacedBy(10.dp)
         ) {
-            items(AppState.users.toList()) { user ->
+            items(utilisateurs) { user ->
                 Card(
                     shape = RoundedCornerShape(14.dp),
                     colors = CardDefaults.cardColors(containerColor = White),
