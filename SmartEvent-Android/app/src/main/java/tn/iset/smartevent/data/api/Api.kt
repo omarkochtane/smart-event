@@ -11,17 +11,39 @@ import retrofit2.http.PUT
 import retrofit2.http.Path
 
 // ---------- Configuration ----------
-// Mettre USE_API = true quand le backend Spring Boot est lancé.
-// BASE_URL : adresse IP du PC (téléphone et PC sur le même Wi-Fi), port 8081.
-// Émulateur Android : http://10.0.2.2:8081/
+// USE_API = true quand le backend Spring Boot est lancé ; false pour la démo hors ligne.
+//
+// L'adresse du serveur n'est plus écrite en dur : l'utilisateur la saisit dans
+// l'application (lien « Adresse du serveur » sur l'écran de connexion) et elle est
+// mémorisée sur le téléphone. Le même APK fonctionne donc sur n'importe quel Wi-Fi.
 object ApiConfig {
     const val USE_API = true
 
-    // Émulateur Android Studio : 10.0.2.2 désigne le PC qui héberge le backend.
-    const val BASE_URL = "http://10.0.2.2:8081/"
+    // Valeur par défaut : émulateur Android Studio (10.0.2.2 = le PC qui héberge le backend).
+    // Sur un téléphone, saisir l'adresse du PC, par exemple 192.168.1.150
+    const val DEFAULT_BASE_URL = "http://10.0.2.2:8081/"
 
-    // Téléphone physique (même Wi-Fi que le PC) : remplacer par l'IP du PC, par exemple
-    // const val BASE_URL = "http://192.168.1.150:8081/"
+    // Adresse réellement utilisée par Retrofit.
+    var baseUrl: String = DEFAULT_BASE_URL
+        private set
+
+    // Change l'adresse et force la reconstruction du client Retrofit.
+    fun changerAdresse(url: String) {
+        baseUrl = url
+        ApiClient.reconstruire()
+    }
+
+    // Complète ce que l'utilisateur tape : "192.168.1.150" devient
+    // "http://192.168.1.150:8081/". Accepte aussi une adresse complète.
+    fun normaliser(saisie: String): String {
+        var url = saisie.trim()
+        if (url.isEmpty()) return DEFAULT_BASE_URL
+        if (!url.startsWith("http://") && !url.startsWith("https://")) url = "http://$url"
+        val hote = url.substringAfter("://").substringBefore("/")
+        if (!hote.contains(":")) url = url.replaceFirst(hote, "$hote:8081")
+        if (!url.endsWith("/")) url = "$url/"
+        return url
+    }
 }
 
 // ---------- DTO (objets échangés en JSON) ----------
@@ -125,12 +147,23 @@ interface ApiService {
 
 // Client Retrofit unique
 object ApiClient {
-    val service: ApiService by lazy {
+    // Reconstruit à la demande : l'adresse du serveur peut changer en cours d'utilisation.
+    @Volatile
+    private var instance: ApiService? = null
+
+    val service: ApiService
+        get() = instance ?: creer().also { instance = it }
+
+    private fun creer(): ApiService =
         Retrofit.Builder()
-            .baseUrl(ApiConfig.BASE_URL)
+            .baseUrl(ApiConfig.baseUrl)
             .addConverterFactory(GsonConverterFactory.create())
             .build()
             .create(ApiService::class.java)
+
+    // Appelé après un changement d'adresse : le prochain appel recrée le client.
+    fun reconstruire() {
+        instance = null
     }
 
     // Jeton JWT reçu au login

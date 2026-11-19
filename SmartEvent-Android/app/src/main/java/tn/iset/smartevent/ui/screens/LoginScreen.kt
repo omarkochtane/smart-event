@@ -35,6 +35,7 @@ import androidx.compose.ui.unit.sp
 import tn.iset.smartevent.data.AppState
 import tn.iset.smartevent.ui.components.AppTextField
 import tn.iset.smartevent.ui.components.PrimaryButton
+import tn.iset.smartevent.ui.components.ServerDialog
 import tn.iset.smartevent.ui.theme.Cloud
 import tn.iset.smartevent.ui.theme.Navy900
 import tn.iset.smartevent.ui.theme.Slate300
@@ -50,7 +51,10 @@ fun LoginScreen(onLogin: () -> Unit, onRegister: () -> Unit) {
     var password by remember { mutableStateOf("") }
     var error by remember { mutableStateOf<String?>(null) }
     var loading by remember { mutableStateOf(false) }
+    var serveurOuvert by remember { mutableStateOf(false) }
     val scope = rememberCoroutineScope()
+
+    if (serveurOuvert) ServerDialog(onClose = { serveurOuvert = false })
 
     Column(
         modifier = Modifier
@@ -106,6 +110,16 @@ fun LoginScreen(onLogin: () -> Unit, onRegister: () -> Unit) {
             TextButton(onClick = onRegister, modifier = Modifier.align(Alignment.CenterHorizontally)) {
                 Text("Pas encore de compte ? ", color = Slate500, fontSize = 13.sp)
                 Text("Créer un compte", color = Navy900, fontWeight = FontWeight.Bold, fontSize = 13.sp)
+            }
+
+            // Permet de changer l'adresse du PC qui héberge le backend sans refaire l'APK
+            if (ApiConfig.USE_API) {
+                TextButton(
+                    onClick = { serveurOuvert = true },
+                    modifier = Modifier.align(Alignment.CenterHorizontally)
+                ) {
+                    Text("Adresse du serveur", color = Slate500, fontSize = 12.sp)
+                }
             }
         }
     }

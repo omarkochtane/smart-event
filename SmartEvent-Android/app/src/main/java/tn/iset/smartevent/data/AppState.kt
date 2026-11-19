@@ -25,7 +25,8 @@ data class AppUser(val id: Int, val name: String, val email: String, val role: R
 // ApiConfig.USE_API = false : données fictives en mémoire.
 // ApiConfig.USE_API = true  : les données viennent du backend Spring Boot (Retrofit + JWT).
 object AppState {
-    private val api = ApiClient.service
+    // Relu à chaque appel : le client est recréé si l'adresse du serveur change.
+    private val api get() = ApiClient.service
     private val scope = CoroutineScope(SupervisorJob() + Dispatchers.Main)
 
     val registeredIds = mutableStateListOf<Int>()
@@ -80,7 +81,7 @@ object AppState {
             409 -> "Action impossible (déjà inscrit, complet ou email déjà utilisé)"
             else -> "Erreur serveur (${e.code()})"
         }
-        else -> "Serveur injoignable. Vérifiez BASE_URL, le Wi-Fi et que le backend est lancé."
+        else -> "Serveur injoignable. Vérifiez l'adresse du serveur, le Wi-Fi et que le backend est lancé."
     }
 
     // Lance un appel API en arrière-plan, puis recharge les données
