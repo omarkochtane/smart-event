@@ -14,7 +14,7 @@ Trois rôles : **étudiant** (consulte et s'inscrit), **enseignant** (crée et g
 | `SmartEvent-Backend/` | API REST (Spring Boot, Spring Security, JWT, JPA, MySQL) |
 | `SmartEvent-Backend/database/` | `schema.sql` : script de création de la base MySQL |
 | `SmartEvent-Backend/postman/` | Collection Postman de test de l'API |
-| `apk/` | `SmartEvent-demo.apk` : version démo installable, sans serveur |
+| `apk/` | `SmartEvent.apk` (se connecte au serveur) et `SmartEvent-demo.apk` (démo hors ligne) |
 
 ## Architecture
 
@@ -25,9 +25,22 @@ Android (Kotlin, Compose)  ->  API REST  ->  Spring Boot  ->  MySQL
 Quatre entités : **User**, **Event**, **Registration**, **Category**.
 Mots de passe chiffrés en BCrypt, authentification par jeton **JWT**.
 
-## Tester rapidement (APK démo, sans serveur)
+## Installer l'application (version connectée au serveur)
 
-1. Télécharger `apk/SmartEvent-demo.apk` sur un téléphone Android et l'installer.
+1. Télécharger **`apk/SmartEvent.apk`** sur un téléphone Android et l'installer
+   (autoriser l'installation depuis une source inconnue).
+2. Le téléphone doit être sur le **même Wi-Fi** que le PC qui exécute le backend.
+3. Dans l'application : **Connexion → Adresse du serveur**, saisir l'adresse IP du PC
+   (visible avec `ipconfig`, par exemple `192.168.1.150`) puis **Enregistrer**.
+   Le port `8081` est ajouté automatiquement et l'adresse est mémorisée.
+4. Se connecter avec un compte de démonstration ou créer un compte.
+
+Sur le PC : MySQL (Wamp) démarré, `SmartEventApplication` lancé, et le port **8081**
+autorisé dans le pare-feu Windows.
+
+## Tester sans serveur (APK démo)
+
+1. Télécharger `apk/SmartEvent-demo.apk` : aucune connexion, données fictives.
 2. S'inscrire avec un email fictif (mot de passe ≥ 4 caractères, téléphone ≥ 8 chiffres) :
    - `omarkochtane51@gmail.com` ou `yassinesouissi011@gmail.com` → espace administrateur
    - email contenant `prof` → espace enseignant
