@@ -19,9 +19,15 @@ import retrofit2.http.Path
 object ApiConfig {
     const val USE_API = true
 
-    // Valeur par défaut : émulateur Android Studio (10.0.2.2 = le PC qui héberge le backend).
-    // Sur un téléphone, saisir l'adresse du PC, par exemple 192.168.1.150
-    const val DEFAULT_BASE_URL = "http://10.0.2.2:8081/"
+    // Valeur par défaut : adresse du PC lorsqu'il partage sa connexion
+    // (point d'accès sans fil mobile de Windows). Elle ne change pas d'une fois
+    // sur l'autre, donc les utilisateurs n'ont rien à saisir : il leur suffit de
+    // se connecter au Wi-Fi partagé par le PC.
+    //
+    // Autres cas, à saisir dans l'écran « Adresse du serveur » :
+    //   émulateur Android Studio ......... 10.0.2.2
+    //   PC sur un Wi-Fi ordinaire ........ son adresse IPv4 (commande ipconfig)
+    const val DEFAULT_BASE_URL = "http://192.168.137.1:8081/"
 
     // Adresse réellement utilisée par Retrofit.
     var baseUrl: String = DEFAULT_BASE_URL

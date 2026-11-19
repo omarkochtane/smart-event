@@ -29,11 +29,15 @@ Mots de passe chiffrés en BCrypt, authentification par jeton **JWT**.
 
 1. Télécharger **`apk/SmartEvent.apk`** sur un téléphone Android et l'installer
    (autoriser l'installation depuis une source inconnue).
-2. Le téléphone doit être sur le **même Wi-Fi** que le PC qui exécute le backend.
-3. Dans l'application : **Connexion → Adresse du serveur**, saisir l'adresse IP du PC
-   (visible avec `ipconfig`, par exemple `192.168.1.150`) puis **Enregistrer**.
-   Le port `8081` est ajouté automatiquement et l'adresse est mémorisée.
-4. Se connecter avec un compte de démonstration ou créer un compte.
+2. Se connecter au **Wi-Fi partagé par le PC** (point d'accès sans fil mobile de
+   Windows). L'application est préréglée sur `192.168.137.1`, l'adresse que Windows
+   donne au PC dans ce cas : **aucune saisie n'est nécessaire**.
+3. Se connecter avec un compte de démonstration ou créer un compte.
+
+Sur un Wi-Fi ordinaire (box, réseau de l'établissement), l'adresse du PC est différente :
+**Connexion → Adresse du serveur**, saisir l'adresse IPv4 du PC (commande `ipconfig`,
+par exemple `192.168.1.22`) puis **Enregistrer**. Le port `8081` est ajouté
+automatiquement et l'adresse est mémorisée sur le téléphone.
 
 Sur le PC : MySQL (Wamp) démarré, `SmartEventApplication` lancé, et le port **8081**
 autorisé dans le pare-feu Windows.
